@@ -5,7 +5,6 @@ let colors = {
   bird: 'rgba(80,80,80,1)',
   canvas: 'rgba(155,215,213,1)',
   tubes: 'rgba(255,114,96,1)',
-  ground: 'rgba(135,164,79,1)',
   gameOverBackground: 'rgba(0, 0, 0, 0.5)'
 }
 
@@ -19,7 +18,6 @@ let scale = 3; // Change to 1 on retina screens to see blurry canvas.
 canvas.width = Math.floor(size_x * scale);
 canvas.height = Math.floor(size_y * scale);
 ctx.scale(scale, scale);
-
 
 // initial setup
 ctx.fillStyle = colors.canvas;
@@ -195,7 +193,6 @@ class Bird {
   flap(){
     this.vertical_speed -= 3;
   }
-
 }
 
 let bird = new Bird();
@@ -211,8 +208,6 @@ function rerender(){
   bird.draw();
   tubeDrawer();
   frame++;
-
-
 
   if (tubesCont[0]){
     // checks if the collision is possible on x-axis
