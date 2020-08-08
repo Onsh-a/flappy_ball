@@ -25,7 +25,6 @@ ctx.scale(scale, scale);
 ctx.fillStyle = colors.canvas;
 ctx.fillRect(0, 0, canvas.width, canvas.width)
 
-
 // setting
 let upPressed = false;
 let collided = false;
@@ -60,6 +59,15 @@ document.addEventListener('keydown', e => {
   }
 });
 
+function refresh(){
+  frame = 0;
+  bird = new Bird()
+  counter = 0;
+  tubesCont.length = 0;
+  clouds.length = 0;
+  collided = false;
+}
+
 class Tube {
   constructor(){
     this.space = 200; // space between top and bottom tubes;
@@ -79,6 +87,11 @@ class Tube {
     this.x_coord -= velocity
     this.draw()
   }
+  countScore(){
+    if (this.x_coord + this.width === 29 ) {
+      counter++
+    }
+  }
 }
 
 function tubeDrawer(){
@@ -89,7 +102,6 @@ function tubeDrawer(){
     item.update()
   });
   if (tubesCont.length > 2) {
-    counter++
     tubesCont.shift();
   }
 }
@@ -108,8 +120,8 @@ class Cloud {
 
   }
   update(){
-    this.x_coord -= velocity
-    this.draw()
+    this.x_coord -= velocity;
+    this.draw();
   }
 }
 
@@ -120,7 +132,7 @@ function cloudDrawer(){
   clouds.forEach((item, i) => {
     item.update()
   });
-  if (clouds.length > 5) {
+  if (clouds.length > 3) {
     clouds.shift();
   }
 }
@@ -155,8 +167,8 @@ class Bird {
     this.gravity = 1;
   }
   update(){
-    if (this.y_coord >= size_y - this.radius - 20) { // the bird has fallen
-      this.y_coord = size_y - this.radius - 20;
+    if (this.y_coord >= size_y - this.radius - 30) { // the bird has fallen
+      this.y_coord = size_y - this.radius - 30;
       collided = true
 
     } else {
@@ -186,14 +198,6 @@ class Bird {
 
 }
 
-function refresh(){
-  bird = new Bird()
-  counter = 0;
-  tubesCont.length = 0;
-  clouds.length = 0;
-  collided = false;
-}
-
 let bird = new Bird();
 let grass = new Grass();
 
@@ -201,23 +205,23 @@ function rerender(){
   ctx.clearRect(0, 0, canvas.width, canvas.width) // clearing canvas
   ctx.fillStyle = colors.canvas;
   ctx.fillRect(0, 0, canvas.width, canvas.width) // setting background
-  //ctx.fillStyle = colors.ground;
-  //ctx.fillRect(0, 400, canvas.width, canvas.width)
   cloudDrawer()
-
   grass.update()
-
   bird.update();
   bird.draw();
   tubeDrawer();
   frame++;
 
+
+
   if (tubesCont[0]){
     // checks if the collision is possible on x-axis
+    tubesCont[0].countScore()
     if (tubesCont[0].x_coord < bird.x_coord + bird.radius && tubesCont[0].x_coord + tubesCont[0].width  > bird.x_coord - bird.radius) {
 
       let upperEdge = bird.y_coord - bird.radius;
       let bottomEdge = bird.y_coord + bird.radius;
+
       // checks if it is possible on y-axis
       if (upperEdge <= tubesCont[0].top) {
         collided = true
@@ -226,8 +230,9 @@ function rerender(){
         collided = true
       }
     }
-
   }
+
+  drawCounter()
 
   if (!collided) {
     requestAnimationFrame(rerender);
@@ -236,7 +241,17 @@ function rerender(){
   }
 }
 
-function startScreen(){
+function drawCounter(){
+  ctx.font = "28px pixel";
+  ctx.fillStyle = 'black';
+  ctx.fillText(counter, size_x / 2, 60);
+  ctx.textAlign = "center";
+  ctx.font = "24px pixel";
+  ctx.fillStyle = 'white';
+  ctx.fillText(counter, size_x / 2, 60);
+}
+
+function startScreen(){ //setting the default start screen
   ctx.fillStyle = colors.canvas;
   ctx.fillRect(0, 0, canvas.width, canvas.width);
   ctx.fillStyle = 'white';
@@ -246,7 +261,7 @@ function startScreen(){
   ctx.fillText(greeting, size_x / 2, size_y / 2);
 }
 
-function printGameOver(){
+function printGameOver(){ //setting the Game Over screen
   isActive = false;
   let score = `score: ${counter}`;
   ctx.fillStyle = colors.gameOverBackground;
