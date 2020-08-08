@@ -1,0 +1,23 @@
+@font-face {
+  font-family: pixel;
+  src: url('assets/fonts/kongtext.ttf');
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game_title {
+  font-family: pixel;
+  font-size: 15px;
+  margin: 20px 0px 20px 0px;
+}
+
+.game_description {
+  font-family: pixel;
+  font-size: 12px;
+  margin: 20px 0px 20px 0px;
+}
